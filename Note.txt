@@ -1,0 +1,1 @@
+https://github.com/microsoft/vscode-eslint/issues/1397 (Fix babel link not found)
