@@ -3,33 +3,81 @@
     v-if="statusMatch === 'default'"
     @onStart="onHandleBeforeStart($event)"
   />
-  <interact-screen v-if="statusMatch === 'match'" />
+  <interact-screen
+    v-if="statusMatch === 'match'"
+    :cardsContext="settings.cardsContext"
+    @onFinish="onGetResult"
+  />
+  <result-screen
+    v-if="statusMatch === 'result'"
+    :timer="timer"
+    @onStartAgain="statusMatch = 'default'"
+  />
+  <p class="copyright">Game nay duoc thuc hien boi Khanh with Love</p>
 </template>
 
 <script>
+import { randomCards } from "./utils/array.js";
 import MainScreen from "./components/MainScreenComp.vue";
 import InteractScreen from "./components/InteractScreenComp.vue";
-// import ResultScreen from "./components/ResultScreenComp.vue";
+import ResultScreen from "./components/ResultScreenComp.vue";
 // import CopyRight from "./components/CopyRightScreenComp.vue;
 
 export default {
   name: "App",
-  data() {
-    return {
-      statusMatch: "default",
-    };
-  },
   components: {
     MainScreen,
     InteractScreen,
-    // ResultScreen,
-    // CopyRight,
+    ResultScreen,
+  },
+  data() {
+    return {
+      settings: {
+        totalOfBlocks: 0,
+        cardsContext: [],
+        startedAt: null,
+      },
+      timer: 0,
+      statusMatch: "default",
+    };
   },
   methods: {
-    onHandleBeforeStart(config) {
-      console.log("running Handle", config);
+    onHandleBeforeStart(configs) {
+      this.settings.totalOfBlocks = configs.totalOfBlocks;
+
+      const firstCards = Array.from(
+        { length: this.settings.totalOfBlocks / 2 },
+        (_, i) => i + 1
+      );
+      const secondCards = [...firstCards];
+      const cards = [...firstCards, ...secondCards];
+
+      this.settings.cardsContext = randomCards(randomCards(randomCards(cards)));
+      this.settings.startedAt = new Date().getTime();
+
       this.statusMatch = "match";
+    },
+
+    onGetResult() {
+      this.statusMatch = "result";
+      this.timer = new Date().getTime() - this.settings.startedAt;
     },
   },
 };
 </script>
+
+<style lang="css" scoped>
+.copyright {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1.5rem;
+  color: var(--light);
+  z-index: 3;
+  font-size: 1.5rem;
+}
+
+.copyright a {
+  color: #f4dc26;
+}
+</style>
