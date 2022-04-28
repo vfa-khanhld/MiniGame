@@ -51,7 +51,7 @@ export default {
         this.rules.length === 2 &&
         this.rules[0].value === this.rules[1].value
       ) {
-        console.log("Right...");
+        console.log("dung");
         this.$refs[`card-${this.rules[0].index}`].onEnabledDisabledMode();
         this.$refs[`card-${this.rules[1].index}`].onEnabledDisabledMode();
         this.rules = [];
@@ -70,7 +70,7 @@ export default {
         this.rules.length === 2 &&
         this.rules[0].value !== this.rules[1].value
       ) {
-        console.log("wrong!");
+        console.log("sai!");
         setTimeout(() => {
           this.$refs[`card-${this.rules[0].index}`].onFlipBackCard();
           this.$refs[`card-${this.rules[1].index}`].onFlipBackCard();
